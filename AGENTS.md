@@ -19,7 +19,7 @@ src/parse.js        parseTranscript(file) → { records (assistant usage), toolU
 src/pricing.js      PRICING table + normalizeModel() + costForUsage(). THE maintenance point.
 src/efficiency.js   createEfficiencyAccumulator() + stableStringify(). Loop/error/rejection/hot-file detection.
 src/aggregate.js    aggregate(files, {sinceMs}) → cost + efficiency report; parseSince() for windows.
-src/report.js       renderText() (cost), renderEfficiency() (detail), toJSON() (stable shape incl. efficiency).
+src/report.js       renderText() (cost + daily sparkline + cache-hit ratio), renderEfficiency() (detail), toJSON(). Helpers: sparkline(), cacheHitRatio(), dailySeries().
 test/               vitest specs + helpers.js (temp roots; asstRecord/toolResultRecord/interruptRecord).
 ```
 

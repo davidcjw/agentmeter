@@ -1,6 +1,6 @@
 {
   "name": "agentmeter",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "See what your AI coding agent actually costs — and where it wastes tokens. Parses local Claude Code transcripts into a cost report (by project, day, tool, model, skill/plugin/MCP, main-loop vs subagent) plus an efficiency report (errors, duplicate calls, re-read files, denied permissions).",
   "type": "module",
   "bin": {

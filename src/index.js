@@ -7,7 +7,16 @@ export { discover, defaultRoot, projectLabel } from './discover.js';
 export { parseTranscript } from './parse.js';
 export { aggregate, parseSince } from './aggregate.js';
 export { costForUsage, normalizeModel, PRICING } from './pricing.js';
-export { renderText, renderEfficiency, toJSON, formatTokens, formatUSD } from './report.js';
+export {
+  renderText,
+  renderEfficiency,
+  toJSON,
+  formatTokens,
+  formatUSD,
+  sparkline,
+  cacheHitRatio,
+  dailySeries,
+} from './report.js';
 
 /**
  * Discover transcripts under a root and aggregate them into a report.

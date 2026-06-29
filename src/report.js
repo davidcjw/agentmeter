@@ -62,6 +62,59 @@ function clipPath(p, width) {
   return p.length > width ? '…' + p.slice(-(width - 1)) : p;
 }
 
+const SPARK_BARS = '▁▂▃▄▅▆▇█';
+
+/** Render an array of values as a unicode sparkline. Zero -> '·', else scaled. */
+export function sparkline(values) {
+  const max = Math.max(0, ...values);
+  return values
+    .map((v) => {
+      if (v <= 0) return '·';
+      if (max <= 0) return SPARK_BARS[0];
+      const idx = Math.min(SPARK_BARS.length - 1, Math.round((v / max) * (SPARK_BARS.length - 1)));
+      return SPARK_BARS[idx];
+    })
+    .join('');
+}
+
+/** Fraction of input/prompt tokens served from cache (0..1). */
+export function cacheHitRatio(tokens) {
+  const prompt = tokens.input + tokens.cacheRead + tokens.cacheCreation;
+  return prompt > 0 ? tokens.cacheRead / prompt : 0;
+}
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function dayLabel(iso) {
+  // iso = "YYYY-MM-DD"
+  const [, m, d] = iso.split('-');
+  return `${MONTHS[Number(m) - 1]} ${Number(d)}`;
+}
+function addDaysISO(iso, n) {
+  const [y, m, d] = iso.split('-').map(Number);
+  const t = Date.UTC(y, m - 1, d) + n * 86_400_000;
+  return new Date(t).toISOString().slice(0, 10);
+}
+
+/**
+ * Build a gap-filled daily cost series ending at the last active day.
+ * @param {Array<{day:string, cost:{total:number}}>} byDay sorted ascending
+ * @param {number} days window length
+ * @returns {Array<{day:string, cost:number}>}
+ */
+export function dailySeries(byDay, days = 14) {
+  if (!byDay.length) return [];
+  const costByDay = new Map(byDay.map((e) => [e.day, e.cost.total]));
+  const end = byDay[byDay.length - 1].day;
+  // Window ends at the last active day; don't start before the first data point.
+  let start = addDaysISO(end, -(days - 1));
+  if (start < byDay[0].day) start = byDay[0].day;
+  const out = [];
+  for (let cur = start; cur <= end; cur = addDaysISO(cur, 1)) {
+    out.push({ day: cur, cost: costByDay.get(cur) || 0 });
+  }
+  return out;
+}
+
 /**
  * Render a human-readable terminal report.
  * @param {object} r aggregate() output
@@ -99,7 +152,28 @@ export function renderText(r, ctx = {}) {
   costRow('output', r.cost.output);
   costRow('cache write', r.cost.cacheWrite);
   costRow('cache read', r.cost.cacheRead);
+  const hit = cacheHitRatio(r.tokens);
+  const cachedPrompt = r.tokens.cacheRead;
+  const totalPrompt = r.tokens.input + r.tokens.cacheRead + r.tokens.cacheCreation;
+  line(
+    `  ${pad('cache hit ratio', 18)}${pad(formatPct(hit), 14)}${c('dim', `${formatTokens(cachedPrompt)} / ${formatTokens(totalPrompt)} input tokens served from cache`)}`
+  );
   line();
+
+  // --- Daily cost trend ----------------------------------------------------
+  const series = dailySeries(r.byDay, 14);
+  if (series.length > 1) {
+    const vals = series.map((s) => s.cost);
+    const peak = series.reduce((a, b) => (b.cost > a.cost ? b : a));
+    const avg = vals.reduce((s, v) => s + v, 0) / vals.length;
+    line(`  ${c('bold', `Daily cost`)} ${c('dim', `(last ${series.length}d)`)}`);
+    line(`  ${c('gray', RULE)}`);
+    line(`  ${c('cyan', sparkline(vals))}`);
+    line(
+      `  ${c('dim', `${dayLabel(series[0].day)} → ${dayLabel(series[series.length - 1].day)} · peak ${formatUSD(peak.cost)} (${dayLabel(peak.day)}) · avg ${formatUSD(avg)}/day`)}`
+    );
+    line();
+  }
 
   // --- By model ------------------------------------------------------------
   section(line, c, 'By model', r.byModel, r.cost.total, (e) => e.model);
@@ -280,6 +354,7 @@ export function toJSON(r, ctx = {}) {
     firstTimestamp: r.firstTs,
     lastTimestamp: r.lastTs,
     tokens: r.tokens,
+    cacheHitRatio: round(cacheHitRatio(r.tokens)),
     cost: roundCost(r.cost),
     serverTools: r.serverTools,
     subagent: {

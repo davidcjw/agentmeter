@@ -39,6 +39,12 @@ Zero runtime dependencies. One Node file's worth of logic, a real test suite, an
   output            $221.66       17%
   cache write       $498.30       39%
   cache read        $522.44       41%
+  cache hit ratio   94.8%         1.6B / 1.7B input tokens served from cache
+
+  Daily cost (last 14d)
+  ────────────────────────────────────────────────────
+  ▅█▇▇▆▇▇▂▃▆▆▂▃▅
+  Jun 16 → Jun 29 · peak $182.40 (Jun 17) · avg $91.75/day
 
   By model
   ────────────────────────────────────────────────────
@@ -135,7 +141,7 @@ Models that aren't in the pricing table (e.g. `<synthetic>` local messages) are 
 
 ## JSON output
 
-`--json` emits a stable object: `cost` and `tokens` totals, `subagent` split, `byModel` / `byProject` / `byDay` / `byTool` / `bySkill` / `byPlugin` / `byMcpServer` arrays, an `unpriced` summary, and an `efficiency` block (`errors`, `rejections`, `duplicates`, `hotFiles`, `interrupts`). Good for dashboards, `jq`, or a CI budget check.
+`--json` emits a stable object: `cost` and `tokens` totals, `cacheHitRatio`, `subagent` split, `byModel` / `byProject` / `byDay` / `byTool` / `bySkill` / `byPlugin` / `byMcpServer` arrays, an `unpriced` summary, and an `efficiency` block (`errors`, `rejections`, `duplicates`, `hotFiles`, `interrupts`). The `byDay` array is the source for the daily trend, so dashboards can build their own. Good for `jq` or a CI budget check.
 
 ## Getting recommendations
 
@@ -171,8 +177,9 @@ npm run test:watch
 ## Roadmap
 
 - **v0.1** — cost report (by project / day / model / tool / skill / plugin / MCP, main-loop vs subagent). ✅
-- **v0.2** (this release) — efficiency report: tool errors, duplicate calls & redundant reads (loop/retry), most re-read files (the grounded stand-in for "dead context" — strict CLAUDE.md-never-read detection isn't reliable from transcripts, since auto-loaded files are injected, not read via a tool), and denied permission prompts. ✅
-- **Next** — per-tool token attribution; cost trend / sparkline over time; other transcript formats (Cursor, Codex).
+- **v0.2** — efficiency report: tool errors, duplicate calls & redundant reads (loop/retry), most re-read files (the grounded stand-in for "dead context" — strict CLAUDE.md-never-read detection isn't reliable from transcripts, since auto-loaded files are injected, not read via a tool), and denied permission prompts. ✅
+- **v0.3** (this release) — daily cost trend (sparkline) and a cache-hit-ratio headline. ✅
+- **Next** — per-tool token attribution; CI/cron budget gate (`--fail-over`); subscription-vs-API price framing; other transcript formats (Cursor, Codex).
 
 ## Contributing
 
