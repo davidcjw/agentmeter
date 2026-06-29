@@ -1,5 +1,6 @@
 # agentmeter
 
+[![CI](https://github.com/davidcjw/agentmeter/actions/workflows/ci.yml/badge.svg)](https://github.com/davidcjw/agentmeter/actions/workflows/ci.yml)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)
 ![dependencies: none](https://img.shields.io/badge/dependencies-none-brightgreen.svg)
