@@ -17,6 +17,8 @@ It runs entirely on your machine. Nothing is uploaded anywhere; it only reads th
 
 Zero runtime dependencies. One Node file's worth of logic, a real test suite, and a `--json` mode for scripts and CI.
 
+> 🔭 **Sibling project:** [agentwatch](https://github.com/davidcjw/agentwatch) — watch your agent's cost and activity live as it runs (agentmeter reports after the fact; agentwatch watches in real time).
+
 <!-- Demo: the sample output below doubles as the demo. To add a recorded clip, capture it with vhs (https://github.com/charmbracelet/vhs) and drop it at docs/demo.gif, then embed it here. -->
 
 ## Contents
@@ -67,12 +69,14 @@ Zero runtime dependencies. One Node file's worth of logic, a real test suite, an
 ## Install
 
 ```sh
-npx agentmeter            # run without installing
+npx @davidcjw/agentmeter        # run without installing
 # or
-npm install -g agentmeter
+npm install -g @davidcjw/agentmeter
 ```
 
-Requires Node ≥ 18.
+Both expose the `agentmeter` command. Requires Node ≥ 18.
+
+> The unscoped `agentmeter` name on npm belongs to an unrelated package, so this one ships under the `@davidcjw` scope. The CLI itself is still invoked as `agentmeter`.
 
 ## Usage
 
@@ -158,7 +162,7 @@ The `--json` output is the richest input (full breakdowns + the `efficiency` blo
 ## Library use
 
 ```js
-import { run, report } from 'agentmeter';
+import { run, report } from '@davidcjw/agentmeter';
 
 const { result } = run({ since: '30d' });
 console.log(result.cost.total);
