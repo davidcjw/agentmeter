@@ -185,6 +185,17 @@ npm run test:watch
 - **v0.3** (this release) — daily cost trend (sparkline) and a cache-hit-ratio headline. ✅
 - **Next** — per-tool token attribution; CI/cron budget gate (`--fail-over`); subscription-vs-API price framing; other transcript formats (Cursor, Codex).
 
+## The suite
+
+agentmeter is part of a small family of zero-dependency, local-first tools for
+the AI-agent era:
+
+- **agentmeter** — what your agents cost (historical). ← you are here
+- **[agentwatch](https://github.com/davidcjw/agentwatch)** — a live terminal dashboard of what your agents are doing *right now* (status, tokens, cost, whether they're waiting on you). The runtime sibling to agentmeter — same transcripts, live instead of after-the-fact.
+- **[ctxbudget](https://github.com/davidcjw/ctxbudget)** — the token cost of your context files (CLAUDE.md / AGENTS.md).
+- **[questlog](https://github.com/davidcjw/questlog)** — which of your repos need attention.
+- **[portcull](https://github.com/davidcjw/portcull)** — list/kill processes holding dev ports.
+
 ## Contributing
 
 Contributions are welcome! Please open an issue first to discuss what you'd like to change. See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow.
