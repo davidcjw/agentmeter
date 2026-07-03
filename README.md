@@ -19,7 +19,11 @@ Zero runtime dependencies. One Node file's worth of logic, a real test suite, an
 
 > 🔭 **Sibling project:** [agentwatch](https://github.com/davidcjw/agentwatch) — watch your agent's cost and activity live as it runs (agentmeter reports after the fact; agentwatch watches in real time).
 
-<!-- Demo: the sample output below doubles as the demo. To add a recorded clip, capture it with vhs (https://github.com/charmbracelet/vhs) and drop it at docs/demo.gif, then embed it here. -->
+<p align="center">
+  <img src="docs/demo.gif" alt="agentmeter report: total cost, cache breakdown, daily chart, and cost by model, project, main-loop-vs-subagent, skill, and MCP server" width="720">
+</p>
+
+<sub>Demo recorded with [vhs](https://github.com/charmbracelet/vhs) against a synthetic transcript root — regenerate with `vhs docs/demo.tape`.</sub>
 
 ## Contents
 
